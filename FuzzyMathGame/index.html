@@ -1,0 +1,350 @@
+
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>FuzzyMathGame｜自適應數學學習遊戲</title>
+
+    <link rel="stylesheet" href="/static/css/style.css">
+
+    <!-- KaTeX：數學公式排版 -->
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css"
+    >
+
+    <script
+        defer
+        src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js">
+    </script>
+
+    <script
+        defer
+        src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js">
+    </script>
+
+    <script defer src="/static/js/main.js"></script>
+</head>
+
+<body>
+<div class="app-shell">
+
+    <!-- ==================== 首頁 ==================== -->
+    <section id="home-page" class="page">
+        <div class="home-content">
+            <p class="eyebrow">FUZZY MATH ADVENTURE</p>
+
+            <h1>FuzzyMathGame</h1>
+
+            <p class="home-description">
+                透過自適應難度與解題挑戰，逐步掌握微積分。
+            </p>
+
+            <button
+                type="button"
+                class="primary-button"
+                onclick="showLevelPage()">
+                開始冒險
+            </button>
+        </div>
+    </section>
+
+
+    <!-- ==================== 章節選擇 ==================== -->
+    <section id="level-page" class="page hidden">
+
+        <header class="page-heading">
+            <div>
+                <p class="eyebrow">CHAPTER SELECT</p>
+
+                <h1>選擇冒險章節</h1>
+
+                <p>完成每個章節的挑戰，累積你的數學能力。</p>
+            </div>
+
+            <button
+                type="button"
+                class="secondary-button"
+                onclick="showPage('home-page')">
+                返回首頁
+            </button>
+        </header>
+
+        <div id="level-list" class="level-grid">
+
+            <button type="button" class="level-card"
+                    onclick="startGame(1)">
+                <span class="level-number">CHAPTER 01</span>
+                <strong>函數與數學基礎</strong>
+                <span>函數、代數與基本運算</span>
+            </button>
+
+            <button type="button" class="level-card"
+                    onclick="startGame(2)">
+                <span class="level-number">CHAPTER 02</span>
+                <strong>極限與連續</strong>
+                <span>Limits and Continuity</span>
+            </button>
+
+            <button type="button" class="level-card"
+                    onclick="startGame(3)">
+                <span class="level-number">CHAPTER 03</span>
+                <strong>微分的基本概念</strong>
+                <span>Derivative</span>
+            </button>
+
+            <button type="button" class="level-card"
+                    onclick="startGame(4)">
+                <span class="level-number">CHAPTER 04</span>
+                <strong>微分法則</strong>
+                <span>Differentiation Rules</span>
+            </button>
+
+            <button type="button" class="level-card"
+                    onclick="startGame(5)">
+                <span class="level-number">CHAPTER 05</span>
+                <strong>微分的應用</strong>
+                <span>Applications of Derivatives</span>
+            </button>
+
+            <button type="button" class="level-card"
+                    onclick="startGame(6)">
+                <span class="level-number">CHAPTER 06</span>
+                <strong>不定積分</strong>
+                <span>Indefinite Integrals</span>
+            </button>
+
+            <button type="button" class="level-card"
+                    onclick="startGame(7)">
+                <span class="level-number">CHAPTER 07</span>
+                <strong>定積分</strong>
+                <span>Definite Integrals</span>
+            </button>
+
+            <button type="button" class="level-card"
+                    onclick="startGame(8)">
+                <span class="level-number">CHAPTER 08</span>
+                <strong>積分的應用</strong>
+                <span>Applications of Integrals</span>
+            </button>
+
+        </div>
+    </section>
+
+
+    <!-- ==================== 遊戲畫面 ==================== -->
+    <section id="game-page" class="page hidden">
+
+        <!-- 玩家狀態、題目、計時 -->
+        <header class="game-topbar">
+
+            <!-- 玩家狀態 -->
+            <div class="player-hud">
+
+                <div class="player-name">
+                    <span class="player-icon">⚔</span>
+
+                    <div>
+                        <strong>冒險者</strong>
+                        <small id="chapter-label">CHAPTER 01</small>
+                    </div>
+                </div>
+
+                <div class="status-row">
+                    <span class="status-label hp-label">HP</span>
+
+                    <div class="status-track">
+                        <div id="hp-bar"
+                             class="status-fill hp-fill"></div>
+                    </div>
+
+                    <span id="hp-value" class="status-value">100</span>
+                </div>
+
+                <div class="status-row">
+                    <span class="status-label mp-label">MP</span>
+
+                    <div class="status-track">
+                        <div id="mp-bar"
+                             class="status-fill mp-fill"></div>
+                    </div>
+
+                    <span id="mp-value" class="status-value">100</span>
+                </div>
+
+                <div class="status-row">
+                    <span class="status-label exp-label">ABL</span>
+
+                    <div class="status-track">
+                        <div id="ability-bar"
+                             class="status-fill exp-fill"></div>
+                    </div>
+
+                    <span id="ability-value"
+                          class="status-value">50</span>
+                </div>
+
+            </div>
+
+
+            <!-- 題目 -->
+            <div class="question-heading">
+
+                <div id="question-box" class="question-box">
+                    等待題目載入……
+                </div>
+
+                <p id="question-difficulty" class="difficulty-label">
+                    難度：等待載入
+                </p>
+
+            </div>
+
+
+            <!-- 遊戲操作 -->
+            <div class="game-tools">
+
+                <div class="timer-panel">
+                    <span class="timer-caption">剩餘時間</span>
+                    <strong id="timer">90</strong>
+                    <span>秒</span>
+                </div>
+
+                <button
+                    type="button"
+                    class="secondary-button"
+                    onclick="useHint()">
+                    使用提示
+                    <small>消耗 20 MP</small>
+                </button>
+
+                <button
+                    type="button"
+                    class="secondary-button"
+                    onclick="showLevelPage()">
+                    返回章節
+                </button>
+
+            </div>
+
+        </header>
+
+
+        <!-- ==================== 路徑選擇區 ==================== -->
+        <section class="process-panel door-panel">
+
+            <div class="section-heading">
+
+                <div>
+                    <p class="eyebrow">CHOOSE YOUR PATH</p>
+                    <h2>選擇正確的解題路徑</h2>
+                </div>
+
+                <span class="section-note">
+                    找出正確步驟，繼續前進
+                </span>
+
+            </div>
+
+
+            <!-- 步驟進度 -->
+            <div class="step-progress-panel">
+
+                <div class="step-progress-text">
+                    <span>目前解題進度</span>
+
+                    <strong id="step-progress">
+                        等待題目載入
+                    </strong>
+                </div>
+
+                <div class="step-progress-track">
+                    <div
+                        id="step-progress-bar"
+                        class="step-progress-fill">
+                    </div>
+                </div>
+
+                <p id="current-step" class="current-step-label">
+                    請閱讀題目，選擇第一個解題步驟。
+                </p>
+
+            </div>
+
+
+            <!-- 四道門：由 main.js 動態產生 -->
+            <div
+                id="door-options"
+                class="door-grid"
+                role="group"
+                aria-label="選擇解題步驟">
+
+                <button
+                    type="button"
+                    class="door-card"
+                    disabled>
+                    <span class="door-number">01</span>
+                    <span class="door-icon" aria-hidden="true">🚪</span>
+                    <span class="door-title">等待題目</span>
+                    <span class="door-description">
+                        題目載入後顯示解題步驟
+                    </span>
+                </button>
+
+                <button
+                    type="button"
+                    class="door-card"
+                    disabled>
+                    <span class="door-number">02</span>
+                    <span class="door-icon" aria-hidden="true">🚪</span>
+                    <span class="door-title">等待題目</span>
+                    <span class="door-description">
+                        題目載入後顯示解題步驟
+                    </span>
+                </button>
+
+                <button
+                    type="button"
+                    class="door-card"
+                    disabled>
+                    <span class="door-number">03</span>
+                    <span class="door-icon" aria-hidden="true">🚪</span>
+                    <span class="door-title">等待題目</span>
+                    <span class="door-description">
+                        題目載入後顯示解題步驟
+                    </span>
+                </button>
+
+                <button
+                    type="button"
+                    class="door-card"
+                    disabled>
+                    <span class="door-number">04</span>
+                    <span class="door-icon" aria-hidden="true">🚪</span>
+                    <span class="door-title">等待題目</span>
+                    <span class="door-description">
+                        題目載入後顯示解題步驟
+                    </span>
+                </button>
+
+            </div>
+
+
+            <!-- 作答回饋 -->
+            <div
+                id="feedback-message"
+                class="feedback-message"
+                role="status"
+                aria-live="polite">
+                請選擇一道門，決定下一步的解題方向。
+            </div>
+
+        </section>
+
+    </section>
+
+</div>
+</body>
+</html>
